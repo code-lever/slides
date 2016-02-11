@@ -1,1 +1,4 @@
-Slides...  Everything here is under the [gh-pages](http://github.com/code-lever/slides/tree/gh-pages) branch.
+Slides...
+
+Source: [gh-pages](http://github.com/code-lever/slides/tree/gh-pages)
+Site: http://code-lever.github.io/slides
