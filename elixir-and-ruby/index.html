@@ -76,10 +76,10 @@ http://ruby-lang.org
 # What is Elixir?
 
 * Functional language built on the Erlang VM and OTP
-* With Erlang comes a host of powerful stuff (fault tolerance, distributed processing, etc)
+* Created by José Valim (Devise, Rails) to take advantage of Erlang's existing capabilities, with a nicer syntax and modern set of tools
+* With Erlang comes a host of powerful stuff (fault tolerance, distributed processing, hot code-reloading etc)
 * Syntax and conventions heavily influenced by Ruby
 * If you know Ruby, you know quite a bit of Elixir already
-* Created by José Valim (Devise, Rails) to take advantage of Erlang's existing capabilities, with a nicer syntax and modern set of tools
 
 .pull-left[
 ### Elixir
@@ -134,7 +134,7 @@ irb> ["One", :two, 3]
 * Ruby can be written in many ways, but typically object-oriented
 * Elixir is functional, data structures are immutable!
 * In Elixir, state is achieved using Actors
-* Elixir (and Erlang) have no "traditional" threading
+* Elixir (and Erlang) have no "traditional" threading, processes instead
 * Being built on Erlang, Elixir has first-class support for running in distributed environments
 
 ???
@@ -144,8 +144,9 @@ Similarities
 * MINASWAN -> JINASWAN
 
 Differences
-* XXX Actor model?
-* All concurrent processing is handled by the VM, using light-weight processes
+* Actor model: own memory space, concurrent, send/recv messages from a mailbox
+* All concurrent processing is handled by the VM, scheduled using its own light-weight processes
+* Not atypical to have thousands of processes running in a VM
 * VM doesn't care where a process is, can be local or a remote machine
 
 ---
@@ -220,6 +221,7 @@ irb> [83, 105, 110, 103, 108, 101]
 * Elixir has better built-in support for Unicode
  * Ruby needs [unicode-utils](http://unicode-utils.rubyforge.org)
 * Char lists are not strings!
+ * Usually for Erlang interop
 
 ---
 
