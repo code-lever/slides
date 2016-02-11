@@ -256,8 +256,8 @@ irb> # No tuples, but a list
 irb> ["List", "of", "Strings"]
  => ["List", "of", "Strings"]
 
-irb> {hash: "with", only: "symbol keys"}
- => {:hash=>"with", :only=>"symbol keys"}
+irb> # No real Ruby equivalent
+...> # that I know of
 
 irb> # No real Ruby equivalent
 ...> # that I know of
@@ -270,6 +270,7 @@ irb> {hash: "with", "!" => :x, 4 => "key"}
 ???
 
 * Tuples - not collections, meant for storing multiple things together
+ * Other langs like Python have them
 * Lists - internally they are linked lists
 
 ---
@@ -332,10 +333,11 @@ irb> d.x
 
 ???
 
+* Unnamed functions similar to lambda/proc in Ruby
+* Last expression of a function is it's returned value
 * Modules are just bags of functions
 * Can't use `def` outside of a module, sugar to assign the function to that name w/in module
-* Tuples - not collections, meant for storing multiple things together
-* Lists - internally they are linked lists
+* Structs are just maps w/extra metadata
 
 ---
 
@@ -532,11 +534,19 @@ Nerves, linux firmware booting directly into Erlang VM.
 
 ???
 
+### Features
 * Macros let you manipulate the code that has been passed to them, change how it's evalulated, etc.
 * Macros are how metaprogramming works in Elixir
 * A large amount of the language itself is defined as macros
  * most keywords
  * most operators
+
+### Phoenix
+* Web framework, treats traditional controllers and web sockets equally
+
+### Nerves
+* Embedded stuff, IoT, all code written in Elixir/Erlang
+* Replaces init with Erlang VM!
 
     </textarea>
     <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
