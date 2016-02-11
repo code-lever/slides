@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Elixir and Ruby</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3, h4 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      h2, h3, h4 {
+        margin-bottom: 0;
+      }
+      a, a > code {
+        color: rgb(249, 38, 114);
+        text-decoration: none;
+      }
+      code {
+        background: #e7e8e2;
+        border-radius: 5px;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+      .column-left{ float: left; width: 33%; }
+      .column-right{ float: right; width: 33%; }
+      .column-center{ display: inline-block; width: 33%; }
+      .pull-left {
+        float: left;
+        width: 47%;
+      }
+      .pull-right {
+        float: right;
+        width: 47%;
+      }
+      .pull-right ~ p {
+        clear: both;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Elixir and Ruby
+
+.pull-left[
+![Elixir](elixir-logo.png)
+
+http://elixir-lang.org
+]
+.pull-right[
+![Ruby](ruby-logo.png)
+
+http://ruby-lang.org
+]
+
+---
+
+# What is Elixir?
+
+* Functional language built on the Erlang VM and OTP
+* With Erlang comes a host of powerful stuff (fault tolerance, distributed processing, etc)
+* Syntax and conventions heavily influenced by Ruby
+* Created by José Valim (Devise, Rails) to take advantage of Erlang's existing capabilities, with a nicer syntax and set of tools
+
+.pull-left[
+### Elixir
+```elixir
+iex> IO.puts "Hello, Elixir!"
+Hello, Elixir!
+:ok
+
+iex> ["One", :two, 3]
+["One", :two, 3]
+```
+]
+
+.pull-right[
+### Ruby
+```ruby
+irb> puts "Hello, Ruby!"
+Hello, Ruby!
+=> nil
+
+irb> ["One", :two, 3]
+ => ["One", :two, 3]
+```
+]
+
+???
+
+* Erlang made at Ericsson for telephony switches/exchanges
+ * Highly distributed
+ * High availability
+ * Claiming 9 Nine's in one product (~31.5ms per year of downtime)
+* Erlang philosophy "Let It Crash", designed to handle failures more declaritively
+ * Can avoid handling errors and exceptions in many cases, code w/less complexity
+* OTP: Erlang standard library, Open Telecom Platform
+* Calls into Erlang have no additional overhead, everything is compiled to BEAM bytecode
+* You should totally check out that powerful stuff!  Won't be talking about it here.
+
+---
+
+# Some Similarities
+
+* Open Source
+* High-level, dynamic typing, strong typing
+* Can be run interpreted for use in scripting
+* REPL
+* Tools, package management built in to language distribution
+* Many parts of the syntax are identical or nearly so
+* Friendly communities
+
+# Some Differences
+
+* Ruby can be written in many ways, but typically object-oriented
+* Elixir is functional, data structures are immutable!
+* In Elixir, state is achieved using Actors
+* Elixir (and Erlang) have no "traditional" threading
+* Being built on Erlang, Elixir has first-class support for running in distributed environments
+
+???
+
+Similarities
+* e.g. Unit tests are run scripted, not important to compile ahead of time
+
+Differences
+* XXX Actor model?
+* All concurrent processing is handled by the VM, using light-weight processes
+* VM doesn't care where a process is, can be local or a remote machine
+
+---
+
+# Code!
+
+* Numbers
+* Booleans
+* Strings
+ * Unicode
+ * Interpolation
+* Atoms
+
+---
+
+# More Code!
+
+* Modules
+* Functions
+* Lists
+* Tuples
+* Keyword Lists (used to pass options to functions, last args like Ruby)
+* Maps
+
+---
+
+# Nifty Code!
+
+* Pipelines
+* Pattern Matching
+ * Using maps/strings,tuples
+* Binary decoding
+
+---
+
+# Tools
+
+If you like rbenv or rvm, asdf (https://github.com/HashNuke/asdf) is a simple version manager for Elixir (and Erlang, Ruby, even Node).
+
+.column-left[
+### Need
+* Build/tasks
+* Package mgmt
+* Dependency mgmt
+]
+
+.column-center[
+### Elixir
+* mix
+* mix
+* mix+hex.pm
+]
+
+.column-right[
+### Ruby
+* Rake
+* Bundler
+* Bundler+RubyGems.org
+]
+
+???
+
+* Like Bundler and its Rake tasks, mix can:
+ * create new projects
+ * manage library dependencies
+ * publish releases to hex.pm
+
+---
+
+# More Stuff
+### (You should totally check out on your own)
+
+* Process supervision, GenServers, Actors
+ * Building blocks of Erlang's fault-tolerance and distributed processing
+* Macros, macros, macros
+
+???
+
+* Macros let you manipulate the code that has been passed to them, change how it's evalulated, etc.
+* Macros are how metaprogramming works in Elixir
+* A large amount of the language itself is defined as macros
+ * most keywords
+ * most operators
+
+---
+
+# Try It!
+
+    </textarea>
+    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      remark.create({
+        highlightStyle: 'monokai',
+        highlightLines: true
+      });
+    </script>
+  </body>
+</html>
