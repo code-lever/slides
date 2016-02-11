@@ -13,7 +13,12 @@
         font-family: 'Yanone Kaffeesatz';
         font-weight: normal;
       }
+      h1 {
+        margin-top: 10px;
+        margin-bottom: 5px;
+      }
       h2, h3, h4 {
+        margin-top: 7px;
         margin-bottom: 0;
       }
       a, a > code {
@@ -38,6 +43,13 @@
       }
       .pull-right ~ p {
         clear: both;
+      }
+      .remark-slide-content code {
+        font-size: 0.8em;
+      }
+      .remark-slide-content pre code {
+        font-size: 0.8em;
+        padding: 15px;
       }
     </style>
   </head>
@@ -66,7 +78,8 @@ http://ruby-lang.org
 * Functional language built on the Erlang VM and OTP
 * With Erlang comes a host of powerful stuff (fault tolerance, distributed processing, etc)
 * Syntax and conventions heavily influenced by Ruby
-* Created by José Valim (Devise, Rails) to take advantage of Erlang's existing capabilities, with a nicer syntax and set of tools
+* If you know Ruby, you know quite a bit of Elixir already
+* Created by José Valim (Devise, Rails) to take advantage of Erlang's existing capabilities, with a nicer syntax and modern set of tools
 
 .pull-left[
 ### Elixir
@@ -128,6 +141,7 @@ irb> ["One", :two, 3]
 
 Similarities
 * e.g. Unit tests are run scripted, not important to compile ahead of time
+* MINASWAN -> JINASWAN
 
 Differences
 * XXX Actor model?
@@ -138,23 +152,188 @@ Differences
 
 # Code!
 
-* Numbers
-* Booleans
-* Strings
- * Unicode
- * Interpolation
-* Atoms
+.pull-left[
+### Elixir
+```elixir
+iex> [1, 2.1, 2.1e2, 0x2F, 0b0101, 10_000]
+[1, 2.1, 210.0, 47, 5, 10000]
+
+iex> [true, false, :atom, :"stringy-atom"]
+[true, false, :atom, :"stringy-atom"]
+
+iex> "Iñtërnâtiônàlizætiøn"
+"Iñtërnâtiônàlizætiøn"
+
+iex> String.upcase("Iñtërnâtiônàlizætiøn")
+"IÑTËRNÂTIÔNÀLIZÆTIØN"
+
+iex> String.upcase("weiß")
+"WEISS"
+
+iex> foo = "Interpolation"
+iex> "String #{foo}"
+"String Interpolation"
+
+irb> 'Single'
+'Single'
+
+iex> [83, 105, 110, 103, 108, 101]
+'Single'
+```
+]
+
+.pull-right[
+### Ruby
+```ruby
+irb> [1, 2.1, 2.1e2, 0x2F, 0b0101, 10_000]
+ => [1, 2.1, 210.0, 47, 5, 10000]
+
+irb> [true, false, :symb, :"stringy-symb"]
+ => [true, false, :symb, :"stringy-symb"]
+
+irb> "Iñtërnâtiônàlizætiøn"
+ => "Iñtërnâtiônàlizætiøn"
+
+irb> "Iñtërnâtiônàlizætiøn".upcase
+ => "IñTëRNâTIôNàLIZæTIøN"
+
+irb> "weiß".upcase
+ => "WEIß"
+
+irb> foo = "Interpolation"
+irb> "String #{foo}"
+ => "String Interpolation"
+
+irb> 'Single'
+ => "Single"
+
+irb> [83, 105, 110, 103, 108, 101]
+ => [83, 105, 110, 103, 108, 101]
+```
+]
+
+???
+
+* Atoms in Erlang very similar to Ruby, only created once
+ * Erlang they are not GC'd
+ * Ruby as of 2.2 they can be
+* Elixir has better built-in support for Unicode
+ * Ruby needs [unicode-utils](http://unicode-utils.rubyforge.org)
+* Char lists are not strings!
+
+---
+
+# Code!
+
+.pull-left[
+### Elixir
+```elixir
+iex> {"Tuple", "of", "Strings"}
+{"Tuple", "of", "Strings"}
+
+iex> ["List", "of", "Strings"]
+["List", "of", "Strings"]
+
+iex> [keyword: "lists", are: "fun"]
+[keyword: "lists", are: "fun"]
+
+iex> [{:just, "lists"}, {:of, "tuples"}]
+[just: "lists", of: "tuples"]
+
+iex> %{:map => "2", "key" => :varies}
+%{:map => "2", "key" => :varies}
+```
+]
+
+.pull-right[
+### Ruby
+```ruby
+irb> # No tuples, but a list
+...> # is pretty close
+
+irb> ["List", "of", "Strings"]
+ => ["List", "of", "Strings"]
+
+irb> {hash: "with", only: "symbol keys"}
+ => {:hash=>"with", :only=>"symbol keys"}
+
+irb> # No real Ruby equivalent
+...> # that I know of
+
+irb> {hash: "with", "!" => :x, 4 => "key"}
+ => {:hash=>"with", "!"=>:x, 4=>"key"}
+```
+]
+
+???
+
+* Tuples - not collections, meant for storing multiple things together
+* Lists - internally they are linked lists
 
 ---
 
 # More Code!
 
-* Modules
-* Functions
-* Lists
-* Tuples
-* Keyword Lists (used to pass options to functions, last args like Ruby)
-* Maps
+.pull-left[
+### Elixir
+```elixir
+iex> f = fn x -> x + 1 end
+iex> f.(2)
+3
+
+iex> defmodule Foo do
+...>   def bar(x), do: x + 2
+...> end
+iex> Foo.bar(10)
+12
+
+iex> # Sorry!
+iex> # No!
+iex> # Classes!
+
+iex> defmodule Data do
+...>   defstruct x: nil, y: 2, z: "zee"
+...> end
+iex> d = %Data{x: 25, z: "why"}
+%Data{x: 25, y: 2, z: "why"}
+iex> d.x
+25
+```
+]
+
+.pull-right[
+### Ruby
+```ruby
+irb> f = ->(x) { x + 1 }
+irb> f.(2)
+ => 3
+
+irb> module Foo
+...>   def self.bar(x) x + 2 end
+...> end
+irb> Foo.bar(10)
+ => 12
+
+irb> class Baz
+...>   def quux(x) x - 1 end
+...> end
+
+irb> Data = Struct.new(:x, :y, :z)
+
+
+irb> d = Data.new(25, 2, "why")
+ => #<struct Data x=25, y=2, z="why">
+irb> d.x
+ => 25
+```
+]
+
+???
+
+* Modules are just bags of functions
+* Can't use `def` outside of a module, sugar to assign the function to that name w/in module
+* Tuples - not collections, meant for storing multiple things together
+* Lists - internally they are linked lists
 
 ---
 
@@ -219,6 +398,7 @@ If you like rbenv or rvm, asdf (https://github.com/HashNuke/asdf) is a simple ve
 ---
 
 # Try It!
+
 
     </textarea>
     <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
