@@ -115,19 +115,19 @@ irb> ["One", :two, 3]
  * Can avoid handling errors and exceptions in many cases, code w/less complexity
 * OTP: Erlang standard library, Open Telecom Platform
 * Calls into Erlang have no additional overhead, everything is compiled to BEAM bytecode
-* You should totally check out that powerful stuff!  Won't be talking about it here.
+* You should totally check out that powerful stuff!
+ * Hot code reloading
+ * Along w/that migrating in-memory data structures as code reloads
 
 ---
 
 # Some Similarities
 
-* Open Source
+* Open Source with friendly communities
 * High-level, dynamic typing, strong typing
 * Can be run interpreted for use in scripting
-* REPL
-* Tools, package management built in to language distribution
+* REPL, build tools, package management all part of language distribution
 * Many parts of the syntax are identical or nearly so
-* Friendly communities
 
 # Some Differences
 
@@ -339,53 +339,193 @@ irb> d.x
 
 # Nifty Code!
 
-* Pipelines
-* Pattern Matching
- * Using maps/strings,tuples
-* Binary decoding
+### Pipelines
+```elixir
+# without pipelining
+Enum.sum(Enum.filter(Enum.map(Enum.map(~w(0 1 2 3 4 5)), &(&1 * 10)), &Kernel.<(&1, 30)))
+# => 30
 
----
+# with pipelining
+~w(0 1 2 3 4 5)
+|> Enum.map(&String.to_integer/1)
+|> Enum.map(&(&1 * 10))
+|> Enum.filter(&Kernel.<(&1, 30))
+|> Enum.sum
+# => 30
+```
 
-# Tools
+Formalizes something you could achieve in Ruby if writing things functionallyish.
 
-If you like rbenv or rvm, asdf (https://github.com/HashNuke/asdf) is a simple version manager for Elixir (and Erlang, Ruby, even Node).
-
-.column-left[
-### Need
-* Build/tasks
-* Package mgmt
-* Dependency mgmt
-]
-
-.column-center[
-### Elixir
-* mix
-* mix
-* mix+hex.pm
-]
-
-.column-right[
-### Ruby
-* Rake
-* Bundler
-* Bundler+RubyGems.org
-]
+```ruby
+%w(0 1 2 3 4 5).map(&:to_i)
+               .map { |i| i * 10 }
+               .select { |i| i < 30 }
+               .reduce(0, &:+)
+# => 30
+```
 
 ???
 
-* Like Bundler and its Rake tasks, mix can:
- * create new projects
- * manage library dependencies
- * publish releases to hex.pm
+## Pipelines
+* Potential problem with functional languages is the constant passing of data you need to do
 
 ---
 
-# More Stuff
-### (You should totally check out on your own)
+# Nifty Code!
 
-* Process supervision, GenServers, Actors
- * Building blocks of Erlang's fault-tolerance and distributed processing
-* Macros, macros, macros
+### Pattern Matching
+```elixir
+iex> map = %{key1: 25, key2: [1, 2, 3, 4, 5]}
+iex> %{key1: val1, key2: [head | tail]} = map
+iex> val1
+25
+iex> head
+1
+iex> tail
+[2, 3, 4, 5]
+```
+
+I can use this to enforce an expected structure.
+
+```elixir
+iex> func = fn x ->
+...>   if x < 10 do
+...>     {:ok, "good job"}
+...>   else
+...>     {:error, "what are you thinking"}
+...>   end
+...> end
+
+iex> {:ok, result} = func.(5)
+{:ok, "good job"}
+iex> result
+"good job"
+
+iex> {:ok, result} = func.(15)
+ ** (MatchError) no match of right hand side value: {:error, "what are you thinking"}
+```
+
+???
+
+* Available in other languages like Scala, Haskell.  ES6 has a subset of it.
+* `=` is not assignment, it is a *match operator*, it makes both sides of the expression equivalent
+* You'll find you use this nearly everywhere
+
+---
+
+# Nifty Code!
+
+### Pattern Matching
+```elixir
+iex> buzz = fn
+...>   (0, 0, _) -> "FizzBuzz"
+...>   (0, _, _) -> "Fizz"
+...>   (_, 0, _) -> "Buzz"
+...>   (_, _, x) -> x
+...> end
+
+iex> fizz = fn x -> IO.puts buzz.(rem(x, 3), rem(x, 5), x) end
+
+iex> Enum.each(1..10, fizz)
+1
+2
+Fizz
+4
+Buzz
+Fizz
+7
+8
+Fizz
+Buzz
+:ok
+```
+
+???
+
+* anonymous functions can have multiple implementations with matching
+* first one to match wins
+* for multiples of three print "Fizz" instead of the number
+* for the multiples of five print "Buzz"
+* for numbers which are multiples of both three and five print "FizzBuzz"
+
+---
+
+# Nifty Code!
+
+### Pattern Match All The Things!
+
+Choose what function gets invoked based on what was passed to it.
+
+```elixir
+defmodule Foo do
+  def bar("user_id:" <> id, %{name: name}) do
+    IO.puts("User #{id} has name #{name}")
+  end
+  def bar("admin_id:" <> id, %{name: name}) do
+    IO.puts("Admin #{id} has name #{name}")
+  end
+  def bar(_, _) do
+    IO.puts("Error! What are you?")
+  end
+end
+```
+
+Extract 7 separate values of various sizes and encodings from a string of binary data in 1 expression.
+
+```elixir
+<<_pad :: size(7)-unit(8), csec :: size(4)-signed-little-integer-unit(8),
+  sec :: size(1)-unit(8), min :: size(4)-unsigned-big-integer-unit(8),
+  deg :: size(1)-unit(8), _pad2 :: size(3)-unit(8),
+  flags :: size(1)-unit(8)>> = data
+```
+
+---
+
+# Resources
+
+If you like rbenv or rvm, asdf (https://github.com/HashNuke/asdf) is a simple version manager for Elixir (and Erlang, Ruby, even Node).
+
+* http://elixir-lang.org/getting-started/introduction.html
+* http://elixirschool.com
+* Elixir Slack: https://elixir-slackin.herokuapp.com
+
+Two really great books on the language and how it can be used with Erlang.
+
+.pull-left.center[![Programming Elixir](programming-elixir.png)]
+.pull-right.center[![Elixir in Action](elixir-in-action.png)]
+
+---
+
+# Go Try It!
+
+All kinds of other stuff I haven't (maybe) mentioned:
+
+* Rake + Bundler &rarr; mix
+* Macros (metaprogramming)
+* Protocols
+* Comprehensions
+* First-class documentation, available at run-time
+* Doctests
+* Concurrent unit tests
+* Agents
+* GenServers
+* Supervision trees
+* It even has `if` statements, but you'll rarely need them!
+
+and some fun projects...
+
+.pull-left.center[
+![Phoenix Framework](phoenix.png)
+http://phoenixframework.org
+
+Web framework of choice.
+]
+.pull-right.center[
+![Nerves](nerves.png)
+http://nerves-project.org
+
+Nerves, linux firmware booting directly into Erlang VM.
+]
 
 ???
 
@@ -394,11 +534,6 @@ If you like rbenv or rvm, asdf (https://github.com/HashNuke/asdf) is a simple ve
 * A large amount of the language itself is defined as macros
  * most keywords
  * most operators
-
----
-
-# Try It!
-
 
     </textarea>
     <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
